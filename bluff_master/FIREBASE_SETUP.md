@@ -1,60 +1,68 @@
 # Firebase Setup Guide for Bluff Master
 
-## Step 1: Create Firebase Project
+## Step 1: Firebase Project
 
-1. Go to https://console.firebase.google.com/
-2. Click "Add project"
-3. Enter project name: "Bluff Master"
-4. Disable Google Analytics (optional)
-5. Click "Create project"
+The project uses Firebase project **bluff-master-61e30**.
+If you're forking, create your own project and re-run `flutterfire configure`.
 
-## Step 2: Add Android App
+## Step 2: Enable Authentication
 
-1. In Firebase console, click "Android" icon
-2. Enter package name: `com.example.bluff_master`
-3. Download `google-services.json`
-4. Place it in: `bluff_master/android/app/google-services.json`
+In Firebase Console → **Authentication** → **Sign-in method**, enable:
 
-## Step 3: Enable Authentication Methods
+1. **Email/Password** — used for the register/login form
+2. **Google** — used for "Continue with Google"
+3. **Anonymous** — used for "Play as Guest"
 
-1. In Firebase console, go to **Authentication** → **Sign-in method**
-2. Enable **Google** sign-in
-   - Set email support email
-   - Save
-3. Enable **Anonymous** sign-in
-   - Save
+## Step 3: Android App — SHA fingerprints (CRITICAL for Google Sign-In)
 
-## Step 4: Add iOS App
+Google Sign-In on Android requires your signing certificate's SHA-1 and SHA-256
+to be registered in the Firebase Console.
 
-1. In Firebase console, click "Add app" → iOS icon
-2. Enter Bundle ID: `com.example.bluffMaster`
-3. Download `GoogleService-Info.plist`
-4. Drag into Xcode project under `Runner` folder
-5. Open in Xcode: confirm file was added
+### Debug fingerprint
+```bash
+cd bluff_master/android
+./gradlew signingReport
+```
+Look for `SHA1:` and `SHA-256:` under `Variant: debug`.
 
-## Step 5: Update ios/Runner/Info.plist
-
-Add these keys to your Info.plist (in Xcode or text editor):
-
-```xml
-<key>GADApplicationIdentifier</key>
-<string>Your_AdMob_App_ID</string>
-
-<key>CFBundleURLTypes</key>
-<array>
-  <dict>
-    <key>CFBundleTypeRole</key>
-    <string>Editor</string>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <!-- Replace with your REVERSED_CLIENT_ID from GoogleService-Info.plist -->
-      <string>com.google.apps.id.YOUR_REVERSED_CLIENT_ID</string>
-    </array>
-  </dict>
-</array>
+### Release fingerprint
+```bash
+keytool -list -v -keystore /path/to/your-release.jks -alias your-alias
 ```
 
-## Step 6: Run the App
+**Add both** SHA-1 and SHA-256 hashes in:
+Firebase Console → Project Settings → Your Android app → SHA certificate fingerprints
+
+Then **re-download** `google-services.json` and replace `android/app/google-services.json`.
+The new file should have an `oauth_client` section with your web client ID.
+
+## Step 4: Firestore
+
+1. In Firebase Console → **Firestore Database** → Create database
+2. Start in **test mode** for development, or apply security rules:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+    match /rooms/{code} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+```
+
+## Step 5: iOS (optional)
+
+1. Add an iOS app in Firebase Console with bundle ID `com.example.bluffMaster`
+2. Download `GoogleService-Info.plist` → place in `ios/Runner/`
+3. In `ios/Runner/Info.plist`, replace `YOUR_IOS_CLIENT_ID` with the
+   `REVERSED_CLIENT_ID` from `GoogleService-Info.plist`
+
+## Step 6: Run
 
 ```bash
 cd bluff_master
@@ -62,20 +70,3 @@ flutter clean
 flutter pub get
 flutter run
 ```
-
----
-
-## Important: google-services.json Location
-
-After downloading from Firebase, place this file at:
-```
-bluff_master/android/app/google-services.json
-```
-
----
-
-## Testing Credentials (Optional)
-
-You can test with dummy credentials first:
-- Use Anonymous sign-in (no real credentials needed)
-- Or create a test Google account

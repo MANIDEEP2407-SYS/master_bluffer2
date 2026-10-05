@@ -14,9 +14,12 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  // On Android, the client ID comes from google-services.json (no clientId needed).
+  // On iOS/web, pass the appropriate clientId via GoogleSignIn(clientId: ...) or
+  // set it in Info.plist / firebase_options.dart.
   final GoogleSignIn _googleAuth = GoogleSignIn(
-      clientId:
-          '883473585633-6keu98g7hsb9cm1qeqvl76puf12gl423.apps.googleusercontent.com');
+    scopes: ['email'],
+  );
 
   final _formKey = GlobalKey<FormState>();
   final _nameCtrl = TextEditingController();

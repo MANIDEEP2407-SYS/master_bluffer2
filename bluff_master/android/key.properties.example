@@ -1,0 +1,6 @@
+# Release signing — copy this file to key.properties and fill in values.
+# NEVER commit key.properties or your .jks keystore file.
+storePassword=YOUR_STORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=bluff-master-release
+storeFile=../release-keystore.jks

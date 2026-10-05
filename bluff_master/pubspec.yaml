@@ -13,8 +13,7 @@ dependencies:
   firebase_core: ^3.8.0
   firebase_auth: ^5.4.0
   google_sign_in: ^6.2.1
-  flutter_riverpod: ^2.5.1
-  go_router: ^14.2.0
+  # flutter_riverpod and go_router removed — not used in this codebase
   socket_io_client: ^3.0.0
   cloud_firestore: ^5.6.0
   http: ^1.2.2

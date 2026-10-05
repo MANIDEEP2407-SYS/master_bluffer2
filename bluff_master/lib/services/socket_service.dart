@@ -26,8 +26,9 @@ class SocketService{
   void connect(){
     if(isConnected) return;
 
-    _socket = IO.io(serverUrl,<String,dynamic>{
-      'transports':['polling','websocket'],
+    _socket = IO.io(serverUrl, <String, dynamic>{
+      'transports': ['websocket', 'polling'],
+      'autoConnect': true,
     });
     // this creates the socket instance with backend url as serverUrl, here transports tell how to connect to server
     // i)polling: Client sends http req again and again every few secs for new data ,slow more usage 

@@ -87,7 +87,8 @@ async function history(uid) {
 
 async function deleteGame(id, uid) {
   if (!db) return false;
-  // Remove only this user's entry; delete the whole game when nobody is left.
+  // Validate ObjectId format to avoid crashes on malformed input
+  if (!ObjectId.isValid(id)) return false;
   const _id = new ObjectId(id);
   await db.collection('games').updateOne({ _id }, { $pull: { players: { uid } } });
   await db.collection('games').deleteOne({ _id, players: { $size: 0 } });

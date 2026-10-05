@@ -25,8 +25,9 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<!-- Replace with your reversed client ID from GoogleService-Info.plist -->
-				<string>com.google.apps.id.YOUR_REVERSED_CLIENT_ID</string>
+				<!-- Replace with your REVERSED_CLIENT_ID from GoogleService-Info.plist -->
+				<!-- e.g. com.googleusercontent.apps.883473585633-XXXXX -->
+				<string>com.googleusercontent.apps.YOUR_IOS_CLIENT_ID</string>
 			</array>
 		</dict>
 	</array>

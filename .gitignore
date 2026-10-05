@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Build artifacts
+build/
+*.apk
+*.aab
+*.ipa
+
+# Flutter (handled by bluff_master/.gitignore too)
+.dart_tool/
+.pub-cache/
+
+# Gradle
+.gradle/
+
+# Keystore (never commit signing keys)
+*.jks
+*.keystore
+key.properties
