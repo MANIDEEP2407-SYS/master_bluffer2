@@ -1,8 +1,15 @@
+const dns = require('dns');
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 require('dotenv').config();
+
+// Use public DNS for SRV lookups (some ISP/corporate DNS blocks MongoDB SRV records)
+if (process.env.DNS_SERVERS) {
+  dns.setServers(process.env.DNS_SERVERS.split(',').map(s => s.trim()));
+}
+
 const mongo = require('./db');
 
 const app = express();
