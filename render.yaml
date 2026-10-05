@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: bluff-master-server
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_ORIGIN
+        value: "*"
+      - key: DNS_SERVERS
+        value: 8.8.8.8,8.8.4.4
+      - key: MONGODB_URI
+        sync: false # paste the value in the Render dashboard, never commit it
