@@ -1,4 +1,5 @@
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:flutter/foundation.dart';
+import 'package:socket_io_client/socket_io_client.dart' as sio;
 import '../config.dart';
 
 class SocketService{
@@ -7,7 +8,7 @@ class SocketService{
   // to restrict the use of socket to one instance 
   static final SocketService instance =  SocketService._internal();
 
-  IO.Socket? _socket;
+  sio.Socket? _socket;
 
   bool get isConnected => _socket?.connected ?? false;
   String? get playerId => _socket?.id;
@@ -26,7 +27,7 @@ class SocketService{
   void connect(){
     if(isConnected) return;
 
-    _socket = IO.io(serverUrl, <String, dynamic>{
+    _socket = sio.io(serverUrl, <String, dynamic>{
       'transports': ['websocket', 'polling'],
       'autoConnect': true,
     });
@@ -34,9 +35,9 @@ class SocketService{
     // i)polling: Client sends http req again and again every few secs for new data ,slow more usage 
     // ii) websocket - one single permanent connection stays open . server can push data instantly
 
-    _socket!.onConnect((_)=>print('Socket connected: ${_socket!.id}'));
-    _socket!.onDisconnect((_)=>print('Socket disconnected'));
-    _socket!.on('connect_error',(data)=>print('Connect error: $data'));
+    _socket!.onConnect((_) => debugPrint('Socket connected: ${_socket!.id}'));
+    _socket!.onDisconnect((_) => debugPrint('Socket disconnected'));
+    _socket!.on('connect_error', (data) => debugPrint('Connect error: $data'));
   }
 
   void disconnect()=>_socket?.disconnect();
